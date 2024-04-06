@@ -1,87 +1,137 @@
+<?php include "header.php"; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TBI Preliminary Assessment</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ZenhVNpHmPQ0oW9R7vZc6iIWkTKN9s7XhxaAOGxW4zBpOpVr4kB44zWKIjT8qZst" crossorigin="anonymous">
-  <style>
-    .question {
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-  </style>
 </head>
 <body>
   <header class="container-fluid bg-primary text-white py-3">
-    <div class="container d-flex justify-content-between">
-      <h1 class="display-4">TBI Preliminary Assessment</h1>
-      <p class="lead">This web app offers a non-official screening for Traumatic Brain Injury (TBI).</p>
+    <div class="container">
+      <h1 class="display-4">Traumatic Brain Injury Preliminary Assessment</h1>
+      <p class="lead">This is a first screening to identify whether the traumatic brain injury is mild, moderate or severe</p>
     </div>
   </header>
   <main class="container mt-5">
-    <p class="lead">Answer the following questions to assess your risk of TBI. Remember, this is not a substitute for professional medical advice. Always consult a doctor for a proper diagnosis and treatment plan.</p>
-    <div id="questions">
-      <p class="question">1. Best Eye Response (Open eyes spontaneously, Opens to verbal command, Opens to pain only, No response)</p>
-      <div class="btn-group" role="group" aria-labelledby="eyeResponse">
-        <button type="button" class="btn btn-primary eye-answer" data-value="4">Spontaneously</button>
-        <button type="button" class="btn btn-primary eye-answer" data-value="3">Verbal Command</button>
-        <button type="button" class="btn btn-primary eye-answer" data-value="2">Pain Only</button>
-        <button type="button" class="btn btn-primary eye-answer" data-value="1">No Response</button>
+  <p><a href="index.php">Back to Home</a></p>
+    <div id="question-card" class="card mb-5 p-3 text-center">
       </div>
-      <p class="question" id="last-question">4. Verbal Response (Oriented, Confused, Inappropriate words/sounds, Incomprehensible sounds, No response)</p>
-      <div class="btn-group" role="group" aria-labelledby="verbalResponse">
-        <button type="button" class="btn btn-primary verbal-answer" data-value="5">Oriented</button>
-        <button type="button" class="btn btn-primary verbal-answer" data-value="4">Confused</button>
-        <button type="button" class="button btn-primary verbal-answer" data-value="3">Inappropriate</button>
-        <button type="button" class="btn btn-primary verbal-answer" data-value="2">Incomprehensible</button>
-        <button type="button" class="btn btn-primary verbal-answer" data-value="1">No Response</button>
-      </div>
-    </div>
     <div id="result" style="display: none;">
       <h2>Your Results</h2>
       <p id="result-text"></p>
     </div>
-    <button type="button" class="btn btn-primary btn-lg mt-3" id="submit-button">Submit Answers</button>
   </main>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERHpONANibvNvt/y1OoQv+mFFw7aNqTp3z8xC0eIlhOFxc4liu9jIK1NznmOM8" crossorigin="anonymous"></script>
   <script>
-    const questions = document.getElementById('questions');
-    const submitButton = document.getElementById('submit-button');
-    const result = document.getElementById('result');
-    const resultText = document.getElementById('result-text');
-    let score = 0; // Initialize score variable
+    const questionsData = [
+  { question: "Do the eyes open?",
+    description: "If the eyes do not spontaneously open, prompt the subject to open their eyes. If they do not open their eyes upon prompting, apply pressure on the fingertips.",
+    answers: [
+      { text: "Eyes open spontaneously", value: 4 },
+      { text: "Eyes open when asked to", value: 3 },
+      { text: "Eyes open to pain only", value: 2 },
+      { text: "No response/don't open", value: 1 },
+    ]
+  },
+  { question: "Do they respond when asked something?",
+    description: "Ask the subject their name and the day of the week; record their response",
+    answers: [
+      { text: "They respond clearly and show they are aware", value: 5 },
+      { text: "They respond in a confused manner (e.g. wrong information given)", value: 4 },
+      { text: "They respond comprehensibly, but without meaning", value: 3 },
+      { text: "They respond incomprehensibly and nonverbally", value: 2 },
+      { text: "No response", value: 1 },
+    ]
+  },
+  { question: "Do they demonstrate motor responses?",
+    description: "Ask the subject to move. If they do not respond, apply pressure on the fingertips",
+    answers: [
+      { text: "They follow instructions on how and where to move", value: 6 },
+      { text: "They intentionally move away from point of pressure", value: 5 },
+      { text: "They reflexively move away from point of pressure", value: 4 },
+      { text: "They reflexively flex muscles inwards in response to pressure", value: 2 },
+      { text: "They reflexively extend muscles in reponse to pressure", value: 2 },
+      { text: "No response", value: 1 },
+    ]
+  },
+  { question: "Do pupils respond to light?",
+    description: "Shine a light in the eyes of the subject; record their response, noting if the pupil dilates.",
+    answers: [
+      { text: "Both pupils react to light", value: 0 },
+      { text: "One pupil reacts to light", value: -1 },
+      { text: "Neither pupil reacts to light", value: -2 }
+    ]
+  }
+];
 
-    // Add click event listener to answer buttons
-    const eyeAnswers = document.querySelectorAll('.eye-answer');
-    eyeAnswers.forEach(button => button.addEventListener('click', function() {
-    score += parseInt(this.dataset.value); // Update score based on button value
-    // Hide current question and show next question (if any)
-    questions.firstElementChild.style.display = 'none';
-    const nextQuestion = questions.querySelector('.question:not([style*="display"])');
-    if (nextQuestion) {
-        nextQuestion.style.display = 'block';
-    }
-    }));
+let currentQuestionIndex = 0;
+let score = 0;
 
-    // Add click event listener to submit button
-    submitButton.addEventListener('click', function() {
-    // Hide questions and show result
-    questions.style.display = 'none';
-    submitButton.style.display = 'none';
-    result.style.display = 'block';
+function showQuestionCard() {
+  const questionCard = document.getElementById('question-card');
+  questionCard.innerHTML = ""; // Clear previous question content
 
-    // Calculate TBI severity based on score
-    let severity;
-    if (score >= 13) {
-        severity = 'Mild';
-    } else if (score >= 9) {
-        severity = 'Moderate';
-    } else {
-        severity = 'Severe (Seek immediate medical attention!)';
-    }
+  const questionData = questionsData[currentQuestionIndex];
+  const questionText = document.createElement('h3');
+  questionText.classList.add('question');
+  questionText.innerText = questionData.question;
 
-    // Display result text
-    resultText.innerText = `Your score is ${score}. This assessment suggests a potential ${severity} TBI. Remember, this is not a diagnosis. Please consult a doctor for a proper evaluation and treatment plan.`;
-    });
+  const questionDescription =document.createElement('p');
+  //questionDescription.classList.add('')
+  questionDescription.innerText = questionData.description;
 
+  const answerContainer = document.createElement('div');
+  answerContainer.classList.add('btncont', 'text-center');
+
+  questionData.answers.forEach(answer => {
+    const answerButton = document.createElement('button');
+    answerButton.classList.add('btn', 'btn-primary', 'answer-button');
+    answerButton.innerText = answer.text;
+    answerButton.dataset.value = answer.value;
+    answerButton.addEventListener('click', handleAnswerClick);
+    answerContainer.appendChild(answerButton);
+  });
+
+  questionCard.appendChild(questionText);
+  questionCard.appendChild(questionDescription);
+  questionCard.appendChild(answerContainer);
+}
+
+function handleAnswerClick(event) {
+  const answerButton = event.target;
+  score += parseInt(answerButton.dataset.value);
+
+  currentQuestionIndex++;
+
+  if (currentQuestionIndex < questionsData.length) {
+    showQuestionCard();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  const questionCard = document.getElementById('question-card');
+  questionCard.style.display = 'none';
+
+  const resultText = document.getElementById('result-text');
+  let severity;
+  if (score >= 13) {
+    severity = 'Mild/None';
+  } else if (score >= 9) {
+    severity = 'Moderate';
+  } else {
+    severity = 'Severe (Seek immediate medical attention)';
+  }
+  resultText.innerText = `This assessment suggests a potentially ${severity} Traumatic Brain Injury. Remember, this is not a diagnosis. Please consult a doctor for a proper evaluation and treatment plan.`;
+
+  const resultDiv = document.getElementById('result');
+  resultDiv.style.display = 'block';
+}
+
+showQuestionCard(); // Display the first question card
+
+  </script>
+</body>
+</html>
