@@ -1,6 +1,7 @@
-<?php include "header.php"; ?>
+
 <!DOCTYPE html>
 <html>
+<?php include "header.php"; ?>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Traumatic Brain Injury Diagnostics</title>
@@ -28,7 +29,7 @@
 
 </head>
 <body>
-
+<div class="mycont">
     <header class="container-fluid bg-primary text-white py-3">
         <div class="container">
         <h1 class="display-4">Traumatic Brain Injury Detailed Assessment</h1>
@@ -37,6 +38,7 @@
     </header>
 
     <div class="container mt-5">
+    <p><a href="index.php">Back to Home</a></p>
         <!-- Reaction Time Game -->
         <div id="reaction-card" class="card text-center">
             <div class="card-body">
@@ -183,6 +185,7 @@ function displayResults() {
 document.getElementById('reaction-card').style.display = 'block'; // Show the reaction game
 
     </script>
-</body>
+</div>
 <?php include "footer.php" ?>
+</body>
 </html>

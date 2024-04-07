@@ -2,6 +2,10 @@
     .footer{
         text-align: center;
         color: white;
+        padding: none;
+        margin: none;
+        right: 0;
+        left: 0;
     }
 </style>
 

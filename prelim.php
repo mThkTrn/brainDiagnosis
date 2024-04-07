@@ -8,6 +8,7 @@
   <title>TBI Preliminary Assessment</title>
 </head>
 <body>
+  <div class="mycont">
   <header class="container-fluid bg-primary text-white py-3">
     <div class="container">
       <h1 class="display-4">Traumatic Brain Injury Preliminary Assessment</h1>
@@ -125,7 +126,7 @@ function showResults() {
     severity = 'Severe (Seek immediate medical attention)';
   }
   resultText.innerHTML = `This assessment suggests a potentially ${severity} Traumatic Brain Injury. Remember, this is not a diagnosis. Please consult a doctor for a proper evaluation and treatment plan.<br><br>
-                          For a more deatiled report and test of key brain health signs, go <a href = "detailed.php">here</a>`;
+                          For a more detailed report and test of key brain health signs, go <a href = "detailed.php">here</a>`;
 
   const resultDiv = document.getElementById('result');
   resultDiv.style.display = 'block';
@@ -134,5 +135,7 @@ function showResults() {
 showQuestionCard(); // Display the first question card
 
   </script>
+</div>
+<?php include "footer.php" ?>
 </body>
 </html>

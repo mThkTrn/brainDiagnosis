@@ -7,6 +7,18 @@
     margin: auto;
     margin-top: 0.5rem;
 }
-body{
-    height: 100vh;
+.mycont{
+    width: 100vw;
+    min-height: 100vh;
+}
+
+
+
+.mycont{
+    max-width: 100%;
+    min-height: 100vh;
+    right: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
 }
