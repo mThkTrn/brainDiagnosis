@@ -124,7 +124,8 @@ function showResults() {
   } else {
     severity = 'Severe (Seek immediate medical attention)';
   }
-  resultText.innerText = `This assessment suggests a potentially ${severity} Traumatic Brain Injury. Remember, this is not a diagnosis. Please consult a doctor for a proper evaluation and treatment plan.`;
+  resultText.innerHTML = `This assessment suggests a potentially ${severity} Traumatic Brain Injury. Remember, this is not a diagnosis. Please consult a doctor for a proper evaluation and treatment plan.<br><br>
+                          For a more deatiled report and test of key brain health signs, go <a href = "detailed.php">here</a>`;
 
   const resultDiv = document.getElementById('result');
   resultDiv.style.display = 'block';

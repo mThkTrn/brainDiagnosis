@@ -8,6 +8,6 @@
 
 <?php
 
-    $name = "BrainDiagnosis"
+    $name = "CogniTest"
 
 ?>
