@@ -25,18 +25,42 @@
     </div>
   </main>
   <script>
+  set = {
+    "eyes" : false,
+    "motor" : false,
+    "question" : false
+  }
+
+
     const questionsData = [
-  { question: "Do the eyes open?",
-    description: "If the eyes do not spontaneously open, prompt the subject to open their eyes. If they do not open their eyes upon prompting, apply pressure on the fingertips.",
+  { question: "Do their eyes open?",
+    description: "Do their eyes open spontaneously?",
+    type: "eyes",
     answers: [
-      { text: "Eyes open spontaneously", value: 4 },
-      { text: "Eyes open when asked to", value: 3 },
-      { text: "Eyes open to pain only", value: 2 },
-      { text: "No response/don't open", value: 1 },
+      { text: "Yes", value: 4 },
+      { text: "No", value: 0 },
     ]
   },
+  { question: "Do their eyes open?",
+    description: "Ask the subject to open their eyes. Do their eyes open?",
+    type: "eyes",
+    answers: [
+      { text: "Yes", value: 3 },
+      { text: "No", value: 0 },
+    ]
+  },
+  { question: "Do their eyes open?",
+    description: "Apply pressures on the fingertips. Do the eyes open?",
+    type: "eyes",
+    answers: [
+      { text: "Yes", value: 2 },
+      { text: "No", value: 1 },
+    ]
+  },
+  
   { question: "Do they respond when asked something?",
     description: "Ask the subject their name and the day of the week; record their response",
+    type: "question",
     answers: [
       { text: "They respond clearly and show they are aware", value: 5 },
       { text: "They respond in a confused manner (e.g. wrong information given)", value: 4 },
@@ -46,9 +70,17 @@
     ]
   },
   { question: "Do they demonstrate motor responses?",
-    description: "Ask the subject to move. If they do not respond, apply pressure on the fingertips",
+    description: "Ask the subject to move. Do they move?",
+    type: "motor",
     answers: [
-      { text: "They follow instructions on how and where to move", value: 6 },
+      { text: "Yes", value: 6 },
+      { text: "No", value: 0 },
+    ]
+  },
+  { question: "Do they demonstrate motor responses?",
+    description: "Apply pressure on the fingertips, do they move?",
+    type: "motor",
+    answers: [
       { text: "They intentionally move away from point of pressure", value: 5 },
       { text: "They reflexively move away from point of pressure", value: 4 },
       { text: "They reflexively flex muscles inwards in response to pressure", value: 2 },
@@ -70,10 +102,15 @@ let currentQuestionIndex = 0;
 let score = 0;
 
 function showQuestionCard() {
+  
+
+  const questionData = questionsData[currentQuestionIndex];
+  console.log(currentQuestionIndex, set[questionData.type])
+  if(set[questionData.type]){currentQuestionIndex++; showQuestionCard()}
+  else{
   const questionCard = document.getElementById('question-card');
   questionCard.innerHTML = ""; // Clear previous question content
 
-  const questionData = questionsData[currentQuestionIndex];
   const questionText = document.createElement('h3');
   questionText.classList.add('question');
   questionText.innerText = questionData.question;
@@ -97,11 +134,17 @@ function showQuestionCard() {
   questionCard.appendChild(questionText);
   questionCard.appendChild(questionDescription);
   questionCard.appendChild(answerContainer);
+  }
 }
 
 function handleAnswerClick(event) {
   const answerButton = event.target;
   score += parseInt(answerButton.dataset.value);
+
+  if  (parseInt(answerButton.dataset.value) > 0){
+    console.log("setting true: " + currentQuestionIndex + " " + questionsData[currentQuestionIndex].type + " " + score)
+    set[questionsData[currentQuestionIndex].type] = true
+  }
 
   currentQuestionIndex++;
 
